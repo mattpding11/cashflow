@@ -1,26 +1,42 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <!-- <SplashScreen /> -->
+  <!-- <Home /> -->
+  <Suspense>
+    <!-- recibe dos slots, default y fallback -->
+    <template #default>
+      <Home />
+    </template>  
+    <!-- Primero se ejecuta este se muestra mientras el otro carga -->
+    <template #fallback>
+      <SplashScreen />
+    </template>  
+  </Suspense>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import SplashScreen from './components/SplashScreen'
+import {defineAsyncComponent} from 'vue'
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    // aqui se define componente asincrono que espera un momento para ser definido y mostrado en la vista
+    Home: defineAsyncComponent(() => 
+      new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(import("./components/Home.vue"))
+        }, 2500)
+      })
+    ),
+    SplashScreen
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+
+/* Se crean variables en elemento raiz del documento */
+:root{
+  --brand-green: #04b500;
+  --brand-blue: #0689b0;
 }
 </style>
